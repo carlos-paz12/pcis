@@ -1,19 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
+project(instruction_set_simulator)
 
-# Define o nome do projeto
-project(InstructionSetSimulator)
-
-# Define o padrão de C++
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Adiciona o diretório src
-include_directories(src)
+include_directories(inc)
 
-# Adiciona os arquivos fonte
-file(GLOB SOURCES
-    src/*.cpp
-)
-
-# Cria o executável
-add_executable(InstructionSetSimulator ${SOURCES})
+add_executable(instruction-set-simulator src/main/main.cpp src/cesar.cpp src/neander.cpp src/ramses.cpp src/memory.cpp src/Utils.cpp)
