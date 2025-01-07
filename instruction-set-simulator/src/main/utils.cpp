@@ -1,8 +1,9 @@
-#include "Utils.h"
+#include "../../inc/utils.h"
 #include <iostream>
+#include <bitset>
 
 void printRegisters(int registers[], int size) {
-    std::cout << "Registradores: ";
+    std::cout << "Registers: ";
     for (int i = 0; i < size; ++i) {
         std::cout << "R" << i << ": " << registers[i] << " ";
     }
@@ -10,7 +11,7 @@ void printRegisters(int registers[], int size) {
 }
 
 void printMemory(int memory[], int size) {
-    std::cout << "Memória: ";
+    std::cout << "Memory: ";
     for (int i = 0; i < size; ++i) {
         std::cout << "M" << i << ": " << memory[i] << " ";
     }
@@ -22,5 +23,5 @@ void printFlags(int flags) {
 }
 
 void printExecutionTime(int cycles) {
-    std::cout << "Tempo de execução: " << cycles << " ciclos" << std::endl;
+    std::cout << "Execution time: " << cycles << " cycles" << std::endl;
 }

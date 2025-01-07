@@ -1,0 +1,3 @@
+/home/dovale/Second-Semester/Sem2/AC1/AC1/pcis/instruction-set-simulator/build/CMakeFiles/InstructionSetSimulator.dir
+/home/dovale/Second-Semester/Sem2/AC1/AC1/pcis/instruction-set-simulator/build/CMakeFiles/edit_cache.dir
+/home/dovale/Second-Semester/Sem2/AC1/AC1/pcis/instruction-set-simulator/build/CMakeFiles/rebuild_cache.dir
