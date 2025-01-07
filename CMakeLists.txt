@@ -5,4 +5,5 @@ set(CMAKE_CXX_STANDARD 11)
 
 include_directories(inc)
 
-add_executable(instruction-set-simulator src/main/main.cpp src/cesar.cpp src/neander.cpp src/ramses.cpp src/memory.cpp src/Utils.cpp)
+set( APP_NAME "pcis" )
+add_executable(${APP_NAME} src/main/main.cpp src/cesar.cpp src/neander.cpp src/ramses.cpp src/memory.cpp src/main/utils.cpp)

@@ -2,7 +2,7 @@
 #include "../../inc/neander.h"
 #include "../../inc/cesar.h"
 #include "../../inc/ramses.h"
-#include "utils.h"
+#include "../../inc/utils.h"
 
 int main() {
     // Example of using the classes and methods
