@@ -6,13 +6,13 @@
 
 struct Instrucao
 {
-    std::uint8_t opcode;  // Código de instrução (8 bits)
+    std::uint8_t opcode;   // Código de instrução (8 bits)
     std::uint8_t endereco; // Endereço de dado (8 bits)
 
-    Instrucao(std::uint8_t opcode, std::uint8_t endereco) 
+    Instrucao(std::uint8_t opcode = std::uint8_t(), std::uint8_t endereco = std::uint8_t())
         : opcode(opcode), endereco(endereco) { /* empty */ }
 
-    Instrucao(const Instrucao &other) 
+    Instrucao(const Instrucao &other)
         : opcode(other.opcode), endereco(other.endereco) { /* empty */ }
 
     Instrucao &operator=(const Instrucao &other)
@@ -30,11 +30,10 @@ struct Instrucao
      * No caso de ser necessário usar um único byte para a instrução.
      * Pode ser ajustado dependendo da forma como você deseja codificar as instruções.
      */
-constexpr std::uint8_t toUint8() const
-{
-    return (opcode << 4) | (endereco & 0x0F);
-}
-
+    constexpr std::uint8_t toUint8() const
+    {
+        return (opcode << 4) | (endereco & 0x0F);
+    }
 
     /**
      * Método para decodificar uma instrução de um byte
@@ -42,8 +41,8 @@ constexpr std::uint8_t toUint8() const
      */
     static Instrucao fromUint8(uint8_t encoded)
     {
-        std::uint8_t opcode = (encoded >> 4) & 0x0F;  // 4 bits para opcode
-        std::uint8_t endereco = encoded & 0x0F;       // 4 bits para endereço
+        std::uint8_t opcode = (encoded >> 4) & 0x0F; // 4 bits para opcode
+        std::uint8_t endereco = encoded & 0x0F;      // 4 bits para endereço
         return Instrucao(opcode, endereco);
     }
 };
