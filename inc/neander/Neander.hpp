@@ -174,6 +174,7 @@ void run(Memory &memory)
         fetch();
 
         // Adiciona uma verificação para parar o loop se o opcode for HLT
+        std::cout << ">>> FIM DO FETCH()\nopcode = " << RI.opcode << ", HLT = " << Opcode::HLT << "\n"; 
         if (RI.opcode == Opcode::HLT) {
             std::cout << "Fim de execução (HLT).\n";
             break;  // Encerra o loop
