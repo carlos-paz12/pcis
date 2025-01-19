@@ -19,10 +19,49 @@ private:
     ULA ula;
 
     ///[!] Método para buscar a instrução na memória.
-    Instrucao fetch(Memory &memory, int &end)
+    Instrucao fetch(Memory &memory)
     {
-        Instrucao m_instrucao{memory.read(end)};
+        Instrucao m_instrucao{memory.read(pc.get_carga())};
         return m_instrucao;
+    }
+
+    void decode(Instrucao instrucao)
+    {
+        switch (instrucao.opcode)
+        {
+        case Opcode::NOP:
+            /* Nada */
+            break;
+        case Opcode::STA_END:
+            STA(instrucao.endereco);
+            break;
+        case Opcode::LDA_END:
+            LDA(instrucao.endereco);
+            break;
+        case Opcode::ADD_END:
+            ADD(instrucao.endereco);
+            break;
+        case Opcode::AND_END:
+            AND(instrucao.endereco);
+            break;
+        case Opcode::OR_END:
+            OR(instrucao.endereco);
+            break;
+        case Opcode::NOT:
+            NOT();
+            break;
+        case Opcode::JMP_END:
+            JMP(instrucao.endereco);
+            break;
+        case Opcode::JN_END:
+            JN(instrucao.endereco);
+            break;
+        case Opcode::JZ_END:
+            JZ(instrucao.endereco);
+            break;
+        default:    ///[!] Opcode padrção é HLT.
+            return; ///[!] Fim de ciclo.
+        }
     }
 
 public:
