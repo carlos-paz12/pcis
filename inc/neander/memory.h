@@ -3,11 +3,12 @@
 
 #include <stdexcept>
 #include <vector>
+#include <instrucao.h>
 
 class Memory
 {
 private:
-  std::vector<int> data;
+  std::vector<Instrucao> data;
 
 public:
   Memory() : data(256, 0) { /* empty */ }
@@ -22,13 +23,11 @@ public:
    * @return O valor armazenado no endereço especificado.
    * @throws std::out_of_range Se o endereço fornecido for inválido.
    */
-  int read(int address) const
+  Instrucao read(int address) const
   {
     if (address >= data.size())
-    {
       throw std::out_of_range("memory read out of bounds"); // Endereço inválido
-    }
-    return data[address]; // Retorna o valor armazenado no endereço
+    return data[address];                                   // Retorna o valor armazenado no endereço
   }
 
   /**
@@ -39,16 +38,16 @@ public:
    * ou ao inicializar a memória com dados.
    *
    * @param address O endereço na memória onde o valor será armazenado (0-255).
-   * @param value O valor a ser armazenado na memória (0-255).
+   * @param instrucao A instrução a ser armazenada na memória.
    */
-  void write(int address, int value)
+  void write(int address, Instrucao instrucao)
   {
 
     if (address >= data.size())
     {
       throw std::out_of_range("memory read out of bounds"); // Endereço inválido
-      data[address] = value;
     }
+    data[address] = instrucao;
   }
 
   /**
@@ -57,11 +56,11 @@ public:
    * Este método recebe um vetor de bytes representando o programa (instruções e dados)
    * e os armazena nos endereços correspondentes da memória, começando do endereço 0.
    *
-   * @param program Um vetor de int contendo as instruções e dados do programa.
+   * @param program Um vetor de Instrucao contendo as instruções e dados do programa.
    */
-  void loadProgram(const std::vector<int> &program)
+  void loadProgram(std::vector<Instrucao> &program)
   {
-    for (size_t i{0}; i < program.size() && i < data.size(); ++i)
+    for (size_t i{0}; i < program.size() and i < data.size(); ++i)
       data[i] = program[i];
   }
 };
