@@ -3,7 +3,8 @@
 
 #include <stdexcept>
 #include <vector>
-#include <instrucao.h>
+
+#include "Instrucao.hpp"
 
 class Memory
 {
