@@ -23,17 +23,20 @@ private:
     uint8_t PC;      ///!> Contador de programa (8 bits).
     uint8_t RDM;     ///!> Dado a ser armazenado na memória.
     Instrucao RI;    ///!> Registrador de instrução.
+    Memory memory;
 
     ULA ula;   ///!> Unidade lógica e aritmética.
     Flag flag; ///!> Flags de controle (indicador de estado).
-    Memory memory;
 
     ///[!] Método para buscar a instrução na memória.
     void fetch()
     {
         REM = PC;                       ///[!] Obtém o endereço de memória atual do contador de programa (PC).
+        std::cout << "REM = " << REM << ", PC = " << PC << "\n";
         RDM = memory.read(REM);         ///[!] Lê o valor da memória no endereço armazenado em REM.
+        std::cout << "RDM (Instrução lida): " << (int)RDM << std::endl;  // Print do valor lido
         RI = Instrucao::fromUint8(RDM); ///[!] Decodifica a instrução lida.
+        std::cout << "Opcode decodificado: " << (int)RI.opcode << std::endl;  // Print do opcode
         ++PC;                           ///[!] Incrementa o contador de programa para a próxima instrução.
         ++ciclos;                       ///[!] Incrementa o contador de ciclos na execução da instrução.
         decode();                       ///[!] Chama a função decode para processar a instrução.
@@ -76,7 +79,7 @@ private:
             execute(&Neander::JZ);
             break;
         default:    ///[!] Opcode padrão é HLT.
-            return; ///[!] Fim de ciclo.
+            break; ///[!] Fim de ciclo.
         }
     }
 
@@ -97,17 +100,6 @@ private:
         }
     }
 
-    void reset()
-    {
-        AC = 0;
-        REM = 0;
-        PC = 0;
-        flag = FLAG_Z;
-        ciclos = 0;
-    }
-
-public:
-    Neander(Memory &memory) : memory(memory), ciclos(0), AC(0), REM(0), PC(0), flag(FLAG_Z) {}
 
     void STA(uint8_t &end)
     {
@@ -117,6 +109,7 @@ public:
     void LDA(uint8_t &end)
     {
         AC = memory.read(end); ///[!] Carrega o valor da memória no AC.
+        std::cout << "LDA: Carregado AC = " << (int)AC << " de memória no endereço " << (int)end << std::endl;
     }
 
     void ADD(uint8_t &end)
@@ -160,6 +153,36 @@ public:
         if (AC == 0)  ///[!] Se AC for zero, realiza o salto.
             PC = end; ///[!] Desvia para o endereço "end".
     }
+
+    void reset()
+    {
+        AC = 0;
+        REM = 0;
+        PC = 0;
+        flag = FLAG_Z;
+        ciclos = 0;
+    }
+
+public:
+    Neander() : ciclos(0), AC(0), REM(0), PC(0), flag(FLAG_Z) {}
+
+void run(Memory &memory)
+{
+    this->memory = memory;
+    while (true)
+    {
+        fetch();
+
+        // Adiciona uma verificação para parar o loop se o opcode for HLT
+        if (RI.opcode == Opcode::HLT) {
+            std::cout << "Fim de execução (HLT).\n";
+            break;  // Encerra o loop
+        }
+    }
+}
+
+        uint8_t getAC() const { return AC; }
+    uint32_t getCycleCount() const { return ciclos; }
 };
 
 #endif // NEANDER_H

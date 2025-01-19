@@ -41,6 +41,7 @@ struct Instrucao
      */
     static Instrucao fromUint8(uint8_t encoded)
     {
+        std::cout << "Decodificando byte: " << (int)encoded << std::endl;
         std::uint8_t opcode = (encoded >> 4) & 0x0F; // 4 bits para opcode
         std::uint8_t endereco = encoded & 0x0F;      // 4 bits para endereço
         return Instrucao(opcode, endereco);
