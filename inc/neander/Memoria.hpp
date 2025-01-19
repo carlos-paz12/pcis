@@ -1,6 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
+#include <cstdint> /// std::uint8_t
 #include <stdexcept>
 #include <vector>
 
@@ -9,7 +10,7 @@
 class Memory
 {
 private:
-  std::vector<Instrucao> data;
+  std::vector<std::uint8_t> data;
 
 public:
   Memory() : data(256) { /* empty */ }
@@ -24,7 +25,7 @@ public:
    * @return O valor armazenado no endereço especificado.
    * @throws std::out_of_range Se o endereço fornecido for inválido.
    */
-  Instrucao read(int address) const
+  uint8_t read(uint8_t address) const
   {
     if (address >= data.size())
       throw std::out_of_range("memory read out of bounds"); // Endereço inválido
@@ -39,16 +40,16 @@ public:
    * ou ao inicializar a memória com dados.
    *
    * @param address O endereço na memória onde o valor será armazenado (0-255).
-   * @param instrucao A instrução a ser armazenada na memória.
+   * @param val Valor a ser armazenada na memória.
    */
-  void write(int address, Instrucao instrucao)
+  void write(uint8_t address, uint8_t val)
   {
 
     if (address >= data.size())
     {
-      throw std::out_of_range("memory read out of bounds"); // Endereço inválido
+      throw std::out_of_range("memory write out of bounds"); // Endereço inválido
     }
-    data[address] = instrucao;
+    data[address] = val;
   }
 
   /**
@@ -59,10 +60,15 @@ public:
    *
    * @param program Um vetor de Instrucao contendo as instruções e dados do programa.
    */
-  void loadProgram(std::vector<Instrucao> &program)
+  void load_program(const std::vector<Instrucao> &program)
   {
-    for (size_t i{0}; i < program.size() and i < data.size(); ++i)
-      data[i] = program[i];
+    // Carrega cada instrução como um byte único na memória
+    for (size_t i = 0; i < program.size(); ++i)
+    {
+      // Converte a instrução para uint8_t e escreve na memória
+      write(i, program[i].toUint8());
+    }
   }
 };
+
 #endif /// MEMORY_H

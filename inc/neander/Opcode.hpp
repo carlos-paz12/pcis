@@ -1,19 +1,19 @@
 #ifndef OPCODE_H
 #define OPCODE_H
 
-enum class Opcode
+enum Opcode
 {
-    NOP,     ///!> Nenhuma operação.
-    STA_END, ///!> Armazena acumulador no endereço “end” da memória
-    LDA_END, ///!> Carrega o acumulador com o conteúdo do endereço “end” da memória
-    ADD_END, ///!> Soma o conteúdo do endereço “end” da memória ao acumulador
-    AND_END, ///!> Efetua operação lógica “E” do conteúdo do endereço “end” da memória ao acumulador
-    OR_END,  ///!>  Efetua operação lógica “OU” do conteúdo do endereço “end” da memória ao acumulador
-    NOT,     ///!> 	Inverte todos os bits do acumulador
-    JMP_END, ///!> Desvio incondicional para o endereço “end” da memória
-    JN_END,  ///!> 	Desvio condicional, se “N=1”, para o endereço “end” da memória
-    JZ_END,  ///!> Desvio condicional, se “Z=1”, para o endereço “end” da memória
-    HLT      ///!> Para o ciclo de busca-decodificação-execução
+    NOP = 0x00,     ///!> Nenhuma operação.
+    STA_END = 0x01, ///!> Armazena acumulador no endereço “end”.
+    LDA_END = 0x02, ///!> Carrega o acumulador com o conteúdo do endereço “end”.
+    ADD_END = 0x03, ///!> Soma o conteúdo do endereço “end” ao acumulador.
+    AND_END = 0x04, ///!> Efetua operação lógica “E” do conteúdo do endereço “end”.
+    OR_END = 0x05,  ///!> Efetua operação lógica “OU” do conteúdo do endereço “end”.
+    NOT = 0x06,     ///!> Inverte todos os bits do acumulador.
+    JMP_END = 0x07, ///!> Desvio incondicional para o endereço “end”.
+    JN_END = 0x08,  ///!> Desvio condicional, se “N=1”, para o endereço “end”.
+    JZ_END = 0x09,  ///!> Desvio condicional, se “Z=1”, para o endereço “end”.
+    HLT = 0xFF      ///!> Para o ciclo de busca-decodificação-execução.
 };
 
 #endif
