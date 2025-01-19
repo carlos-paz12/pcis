@@ -11,7 +11,7 @@ private:
   std::vector<Instrucao> data;
 
 public:
-  Memory() : data(256, 0) { /* empty */ }
+  Memory() : data(256) { /* empty */ }
 
   /**
    * Lê o valor armazenado em um endereço específico da memória.

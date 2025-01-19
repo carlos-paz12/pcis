@@ -9,6 +9,18 @@ struct Instrucao
     int &endereco; ///!> Endereço do dado da instrução.
 
     Instrucao(Opcode opcode, int &endereco) : opcode(opcode), endereco(endereco) { /* empty */ }
+
+    Instrucao(const Instrucao &other) : opcode(other.opcode), endereco(other.endereco) { /* empty */ }
+
+    Instrucao &operator=(const Instrucao &other)
+    {
+        if (this != &other)
+        {
+            opcode = other.opcode;
+            endereco = other.endereco;
+        }
+        return (*this);
+    }
 };
 
 #endif
