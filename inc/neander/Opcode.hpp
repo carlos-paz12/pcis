@@ -1,5 +1,5 @@
-#ifndef OPCODE_H
-#define OPCODE_H
+#ifndef OPCODE_HPP
+#define OPCODE_HPP
 
 enum Opcode
 {
