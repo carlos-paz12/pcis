@@ -181,6 +181,9 @@ void PO::execute()
     case Opcode::JZ_END:
         JZ(); ///[!] Chama a operação JZ.
         break;
+    case Opcode::MUX:
+        AC = ula.mux_operation(AC, RDM, true); ///[!] Chama a operação do multiplexador com controle fixo.
+        break;
     default:
         ///[!] Caso padrão é HALT (não há ação).
         break;

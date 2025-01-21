@@ -12,7 +12,8 @@ enum Opcode {
   JMP_END, ///!> Desvio incondicional para o endereço “end”.
   JN_END,  ///!> Desvio condicional, se “N=1”, para o endereço “end”.
   JZ_END,  ///!> Desvio condicional, se “Z=1”, para o endereço “end”.
-  HLT      ///!> Para o ciclo de busca-decodificação-execução.
+  HLT,      ///!> Para o ciclo de busca-decodificação-execução.
+  MUX       ///!> Multiplexador.
 };
 
 #endif
