@@ -5,14 +5,21 @@
 
 Neander::Neander(Memoria &memoria) : memoria(memoria), po(memoria, pc), pc(memoria, po) {}
 
+PC::PC(Memoria &memoria, PO &po) : memoria(memoria), po(po) {}
+
+PO::PO(Memoria &memoria, PC &pc) : memoria(memoria), pc(pc) {}
+
 void Neander::fetch_decode_execute()
 {
-    while (po.RI.get_opcode() != Opcode::HLT)
+    while (true)
     {
         po.fetch();
         po.decode();
         po.execute();
         po.printstate();
+
+        if (po.RI.get_opcode() == Opcode::HLT)
+            break;
     }
 }
 
@@ -30,22 +37,26 @@ void PO::printstate()
     std::cout << "|         CPU STATE         |" << std::endl;
     std::cout << "+---------------------------+" << std::endl;
     std::cout << "| PC: " << std::setw(24) << (int)pc.get_pc() << " |" << std::endl;
-    std::cout << "| IR: " << std::setw(24) << (int)RI.to_byte() << " |" << std::endl;
+    std::cout << "| IR: " << std::setw(24) << RI.get_opcode() << " |" << std::endl;
     // std::cout << "| Flags: " << std::setw(20) << std::bitset<8>(/* we had to pick the flag*/ ().to_uint8()) << " |" << std::endl;
     std::cout << "| AC: " << std::setw(25) << (int)AC << " |" << std::endl;
     std::cout << "+---------------------------+" << std::endl;
 
     std::cout << "|       Registers:          |" << std::endl;
+   
     for (int i = 0; i < 4; ++i)
-    {
-        std::cout << "| R" << i << ": " << std::setw(22) << (int)memoria.ler(i) << " |" << std::endl;
+    
+        std::cout << "| R" << i << ": " << std::setw(22) <<  REM << " |" << std::endl;
+        std::cout << "| R" << i << ": " << std::setw(22) <<  RDM << " |" << std::endl;
+        std::cout << "| R" << i << ": " << std::setw(22) <<  REM << " |" << std::endl;
     }
     std::cout << "+---------------------------+" << std::endl;
 
     std::cout << "|         Memory:           |" << std::endl;
     for (int i = 0; i < 256; ++i)
     {
-        std::cout << "| M" << i << ": " << std::setw(22) << (int)memoria.ler(i) << " |" << std::endl;
+        int val_mem = memoria.ler(i);
+        std::cout << "| M" << i << ": " << std::setw(22) << val_mem << " |" << std::endl;
     }
     std::cout << "+---------------------------+" << std::endl;
 }

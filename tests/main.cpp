@@ -1,83 +1,193 @@
-#include <iostream>
-
-#include "../inc/neander/Instrucao.hpp"
-#include "../inc/neander/Opcode.hpp"
-#include "../inc/neander/Memoria.hpp"
+#include <bits/stdc++.h>
+#include "../inc/cesar/cesar.h"
 #include "../inc/neander/Neander.hpp"
+#include "../inc/ramses/ramses.h"
 
-void soma()
+enum ProcessorType
 {
-  Memoria memoria;
-  Neander processador(memoria);
+  NEANDER,
+  CESAR,
+  RAMSES,
+  INVALID
+};
 
-  memoria.write(5, 10);
-  memoria.write(6, 20);
+// Function to select the processor
+ProcessorType selectP()
+{
+  std::string choice;
+  std::cout << "Select the processor you want to execute (neander, cesar, ramses): ";
+  std::cin >> choice;
 
-  // A GENTE FAZ A PC POR AQUI OU FAZ DENTRO DE CADA PROCESSADOR? Porque a gente chama dentro do main principal a função quando ele escolher o processador
-  // Para cada processador
-  // Cada processador tem um conjunto de instruções diferentes, e nos outros dois a memória é de 16 bits.
-  // O Neander é a base aí a gente consegue usar ela para fazer os outros dois, os outros dois é só ctrl c ctrl v
-  // O que a gente realmente precisa na PC? >  Não sei direito :/   KKKKKKKKKKKKKKKKKKKKKKKKK  OK
-
-  // por enquanto, faz só essa prte de Criar arquivos com as instrucoes
-  // cria o algoritmo que le esse arquivo e cria varios objetos "Instrucao"
-  // e escreve na memoria
-
-  // Ok, vou fzr ent!
-  memoria.write(0, Instrucao(Opcode::LDA_END, 5).to_uint8()); // AC = 10
-  memoria.write(1, Instrucao(Opcode::ADD_END, 6).to_uint8()); // AC = AC + 20 = 30
-  memoria.write(2, Instrucao(Opcode::STA_END, 7).to_uint8()); // MEM(7) = 30
-  memoria.write(3, Instrucao(Opcode::HLT, 0).to_uint8());     // END
-
-  std::cout << "Memória no endereço 5: " << (int)memoria.read(5) << std::endl;
-  std::cout << "Memória no endereço 6: " << (int)memoria.read(6) << std::endl;
-  std::cout << "Memória no endereço 7: " << (int)memoria.read(7) << std::endl;
-
-  processador.fetch_decode_execute();
-
-  std::cout << "Memória no endereço 5: " << (int)memoria.read(5) << std::endl;
-  std::cout << "Memória no endereço 6: " << (int)memoria.read(6) << std::endl;
-  std::cout << "Memória no endereço 7: " << (int)memoria.read(7) << std::endl;
+  if (choice == "neander" || choice == "NEANDER")
+  {
+    return NEANDER;
+  }
+  else if (choice == "cesar" || choice == "CESAR")
+  {
+    return CESAR;
+  }
+  else if (choice == "ramses" || choice == "RAMSES")
+  {
+    return RAMSES;
+  }
+  else
+  {
+    return INVALID;
+  }
 }
 
-void subtrai()
+// Function to load data into memory
+void loadMemoryData(Memoria &memoria, const std::string &dataFile)
 {
-  Memoria memoria;
-  Neander processador(memoria);
+  std::ifstream infile(dataFile);
+  int address, value;
 
-  memoria.write(6, 20);
-  memoria.write(7, 10);
-  memoria.write(8, 1);
+  // Carregar os dados na memória
+  while (infile >> address >> value)
+  {
+    std::cout << "Escrevendo " << value << " no endereço " << address << std::endl;
+    memoria.escreve(address, value);
+  }
 
-  memoria.write(0, Instrucao(Opcode::LDA_END, 7).to_uint8()); // AC = 20
-  memoria.write(1, Instrucao(Opcode::NOT, 0).to_uint8());     // AC = ~AC
-  memoria.write(2, Instrucao(Opcode::ADD_END, 8).to_uint8()); // AC = AC + MEM(8)
-  memoria.write(3, Instrucao(Opcode::ADD_END, 6).to_uint8()); // AC = AC + MEM(7)
-  memoria.write(4, Instrucao(Opcode::STA_END, 9).to_uint8()); // MEM(9) = AC
-  memoria.write(5, Instrucao(Opcode::HLT, 0).to_uint8());     // END
+  // Exibir os dados da memória
+  std::cout << "+---------------------------+" << std::endl;
+  for (int i = 0; i < 256; ++i)
+  { 
+    int val_memory = memoria.ler(i);
+      
+    // Garantir que o valor da memória seja exibido corretamente
+    std::cout << "| R" << i << ": " << std::setw(22) << val_memory << " |" << std::endl;
+  }
+  std::cout << "+---------------------------+" << std::endl;
+}
 
-  std::cout << "Memória no endereço 6: " << (int)memoria.read(6) << std::endl;
-  std::cout << "Memória no endereço 7: " << (int)memoria.read(7) << std::endl;
-  std::cout << "Memória no endereço 8: " << (int)memoria.read(8) << std::endl;
-  std::cout << "Memória no endereço 9: " << (int)memoria.read(9) << std::endl;
+// Function to load instructions into memory
+void loadMemoryInstructions(Memoria &memoria, const std::string &instrutionFile)
+{
+  std::ifstream infile(instrutionFile);
+  int dataAddress;
+  std::string opcode;
+  std::vector<Instrucao> programa;
+  while (infile >> opcode >> dataAddress)
+  {
+    std::cout << "Escrevendo " << opcode << " mirando no endereço " << dataAddress << std::endl;
+    if (opcode == "NOP")
+    {
+      programa.push_back(Instrucao(Opcode::NOP, dataAddress));
+    }
+    else if (opcode == "STA")
+    {
+      programa.push_back(Instrucao(Opcode::STA_END, dataAddress));
+    }
+    else if (opcode == "LDA")
+    {
+      programa.push_back(Instrucao(Opcode::LDA_END, dataAddress));
+    }
+    else if (opcode == "ADD")
+    {
+      programa.push_back(Instrucao(Opcode::ADD_END, dataAddress));
+    }
+    else if (opcode == "AND")
+    {
+      programa.push_back(Instrucao(Opcode::AND_END, dataAddress));
+    }
+    else if (opcode == "OR")
+    {
+      programa.push_back(Instrucao(Opcode::OR_END, dataAddress));
+    }
+    else if (opcode == "NOT")
+    {
+      programa.push_back(Instrucao(Opcode::NOT, dataAddress));
+    }
+    else if (opcode == "JMP")
+    {
+      programa.push_back(Instrucao(Opcode::JMP_END, dataAddress));
+    }
+    else if (opcode == "JN")
+    {
+      programa.push_back(Instrucao(Opcode::JN_END, dataAddress));
+    }
+    else if (opcode == "JZ")
+    {
+      programa.push_back(Instrucao(Opcode::JZ_END, dataAddress));
+    }
+    else if (opcode == "HLT")
+    {
+      programa.push_back(Instrucao(Opcode::HLT, dataAddress));
+    }
+  }
 
-  // print memo
-  processador.fetch_decode_execute();
-  // print memo
-  
-  std::cout << "Memória no endereço 6: " << (int)memoria.read(6) << std::endl;
-  std::cout << "Memória no endereço 7: " << (int)memoria.read(7) << std::endl;
-  std::cout << "Memória no endereço 8: " << (int)memoria.read(8) << std::endl;
-  std::cout << "Memória no endereço 9: " << (int)memoria.read(9) << std::endl;
+  memoria.carrega(programa);
+  // Exibir os dados da memória
+  std::cout << "+---------------------------+" << std::endl;
+  for (int i = 0; i < 256; ++i)
+  {
+    int val_mem = memoria.ler(i);
+    // Garantir que o valor da memória seja exibido corretamente
+    std::cout << "| R" << i << ": " << std::setw(22) << val_mem << " |" << std::endl;
+  }
+  std::cout << "+---------------------------+" << std::endl;
 }
 
 int main()
 {
-  std::cout << "SOMA\n";
-  soma();
+  // Select processor
+  ProcessorType processor = NEANDER;
+  if (processor == INVALID)
+  {
+    std::cerr << "Invalid Processor" << std::endl;
+    return 1;
+  }
 
-  std::cout << "\nSUBTRAI\n";
-  subtrai();
+  // Get file paths for data and instructions
+  std::string dataFile = "build/data.txt", instructionFile = "build/instructions.txt";
+  //std::cout << "Enter the data file path: ";
+  // std::cin >> instructionFile;
+  //std::cout << "Enter the instruction file path: ";
+  
+
+  Memoria memoria;
+  loadMemoryData(memoria, dataFile);
+  loadMemoryInstructions(memoria, instructionFile);
+
+  auto start = std::chrono::high_resolution_clock::now();
+
+  // Initialize and run processor
+  switch (processor)
+  {
+  case NEANDER:
+  {
+    // Neander processor logic
+    std::cout << "\nNeander Processor:" << std::endl;
+    Neander neanderProcessor(memoria);       // Initialize Neander processor
+    neanderProcessor.fetch_decode_execute(); // Call its execution function
+    break;
+  }
+  case CESAR:
+    // Implement CESAR processor logic here
+    std::cout << "\nCesar Processor: (Not yet implemented)" << std::endl;
+    break;
+  case RAMSES:
+    // Implement RAMSES processor logic here
+    std::cout << "\nRamses Processor: (Not yet implemented)" << std::endl;
+    break;
+  default:
+    std::cerr << "Invalid Processor" << std::endl;
+    return 1;
+  }
+
+
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> elapsed = end - start;
+  int cycles = static_cast<int>(elapsed.count() * 1e6); // Calculate time in microseconds
+
+  // Output results to a file
+  std::ofstream outfile("data/time_results.txt");
+  outfile << "Processor: " << (processor == CESAR ? "Cesar" : processor == NEANDER ? "Neander"
+                                                                                   : "Ramses")
+          << std::endl;
+  outfile << "Execution time: " << cycles << " cycles" << std::endl;
+  outfile.close();
 
   return 0;
 }

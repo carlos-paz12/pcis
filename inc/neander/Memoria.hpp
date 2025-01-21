@@ -11,10 +11,11 @@ using byte = std::uint8_t;
 
 class Memoria {
 private:
+  size_t ocupacao;
   std::vector<byte> dados;
 
 public:
-  Memoria() : dados(256) { /* empty */ }
+  Memoria() : dados(256), ocupacao(0) { /* empty */ }
 
   /**
    * @brief Lê o valor armazenado em um endereço específico da memória.
