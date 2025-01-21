@@ -13,6 +13,7 @@ class PC;
 
 class PO /// Parte Operativa
 {
+public:
   Memoria &memoria;
   PC &pc;
 
@@ -43,7 +44,6 @@ class PO /// Parte Operativa
 
   void reset();
 
-public:
   PO(Memoria &memoria, PC &pc);
 
   void fetch();
@@ -57,6 +57,7 @@ public:
 
 class PC /// Parte de Controle
 {
+public:
   Memoria &memoria;
   PO &po;
 
@@ -65,7 +66,6 @@ class PC /// Parte de Controle
 
   Flag flag; ///!> Flag de controle.
 
-public:
   PC(Memoria &memoria, PO &po);
 
   uint8_t get_pc()

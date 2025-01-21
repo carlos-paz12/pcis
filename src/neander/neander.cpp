@@ -7,10 +7,13 @@ Neander::Neander(Memoria &memoria) : memoria(memoria), po(memoria, pc), pc(memor
 
 void Neander::fetch_decode_execute()
 {
-    po.fetch();
-    po.decode();
-    po.printstate();
-    po.execute();
+    while (po.RI.get_opcode() != Opcode::HLT)
+    {
+        po.fetch();
+        po.decode();
+        po.execute();
+        po.printstate();
+    }
 }
 
 void Neander::print()
@@ -21,7 +24,6 @@ void Neander::print()
 ///=======================================///
 /// Implementação da Parte Operativa (PO) ///
 ///=======================================///
-
 void PO::printstate()
 {
     std::cout << "+---------------------------+" << std::endl;
@@ -29,7 +31,7 @@ void PO::printstate()
     std::cout << "+---------------------------+" << std::endl;
     std::cout << "| PC: " << std::setw(24) << (int)pc.get_pc() << " |" << std::endl;
     std::cout << "| IR: " << std::setw(24) << (int)RI.to_uint8() << " |" << std::endl;
-    std::cout << "| Flags: " << std::setw(20) << std::bitset<8>(/* we had to pick the flag*/().to_uint8()) << " |" << std::endl;
+    //std::cout << "| Flags: " << std::setw(20) << std::bitset<8>(/* we had to pick the flag*/ ().to_uint8()) << " |" << std::endl;
     std::cout << "| AC: " << std::setw(25) << (int)AC << " |" << std::endl;
     std::cout << "+---------------------------+" << std::endl;
 
@@ -121,66 +123,56 @@ void PO::reset()
 
 void PO::fetch()
 {
-    REM = pc.get_pc();               // O endereço de memória atual é o valor do contador de programa
-    RDM = memoria.read(REM);         // Lê o valor da memória no endereço de REM
-    RI = Instrucao::from_uint8(RDM); // Decodifica a instrução lida
-    pc.incrementa_pc();              // Avança para o próximo endereço de memória
-    pc.incrementa_cc();              // Incrementa o contador de ciclos
+    REM = pc.get_pc();       ///[!] O endereço de memória atual é o valor do contador de programa.
+    RDM = memoria.read(REM); ///[!] Lê o valor da memória no endereço de REM.
+    pc.incrementa_pc();      ///[!] Incrementa o contador de programa (avança para o próximo endereço de instrução).
+    pc.incrementa_cc();      ///[!] Incrementa o contador de ciclos.
 }
 
-void Neander::PC::decode()
+void PO::decode()
+{
+    RI = Instrucao::from_uint8(RDM); ///[!] Decodifica a instrução lida.
+    pc.incrementa_cc();              ///[!] Incrementa o contador de ciclos.
+    execute();
+}
+
+void PO::execute()
 {
     switch (RI.get_opcode())
     {
     case Opcode::NOP:
-        // Nenhuma operação
+        ///[!] Nenhuma operação.
         break;
     case Opcode::STA_END:
-        PO::STA(); // Chama a operação STA
+        STA(); ///[!] Chama a operação STA.
         break;
     case Opcode::LDA_END:
-        PO::LDA(); // Chama a operação LDA
+        LDA(); ///[!] Chama a operação LDA.
         break;
     case Opcode::ADD_END:
-        PO::ADD(); // Chama a operação ADD
+        ADD(); ///[!] Chama a operação ADD.
         break;
     case Opcode::AND_END:
-        PO::AND(); // Chama a operação AND
+        AND(); ///[!] Chama a operação AND.
         break;
     case Opcode::OR_END:
-        PO::OR(); // Chama a operação OR
+        OR(); ///[!] Chama a operação OR.
         break;
     case Opcode::NOT:
-        PO::NOT(); // Chama a operação NOT
+        NOT(); ///[!] Chama a operação NOT.
         break;
     case Opcode::JMP_END:
-        PO::JMP(); // Chama a operação JMP
+        JMP(); ///[!] Chama a operação JMP.
         break;
     case Opcode::JN_END:
-        PO::JN(); // Chama a operação JN
+        JN(); ///[!] Chama a operação JN.
         break;
     case Opcode::JZ_END:
-        PO::JZ(); // Chama a operação JZ
+        JZ(); ///[!] Chama a operação JZ.
         break;
     default:
-        // Caso padrão é HALT (não há ação)
+        ///[!] Caso padrão é HALT (não há ação).
         break;
-    }
-}
-
-void Neander::PC::execute()
-{
-    // Em caso de alguma execução final ou adicional que se precise fazer
-}
-
-void Neander::fetch_decode_execute()
-{
-    while (true)
-    {
-        fetch();
-        decode();
-        if (RI.get_opcode() == Opcode::HLT)
-            break; // Interrompe a execução quando o código de operação for HALT
     }
 }
 
