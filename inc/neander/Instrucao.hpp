@@ -20,9 +20,9 @@ public:
 
   static Instrucao from_uint8(uint8_t encoded);
 
-  std::uint8_t Instrucao::get_opcode();
+  std::uint8_t get_opcode();
 
-  std::uint8_t Instrucao::get_endereco();
+  std::uint8_t get_endereco();
 };
 
 #endif /// INSTRUCAO_HPP

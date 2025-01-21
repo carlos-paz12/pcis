@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
-project(instruction_set_simulator)
+project(pcis VERSION 1.0.0 LANGUAGES CXX )
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-include_directories(inc)
-
-set( APP_NAME "pcis" )
-add_executable(${APP_NAME} src/main/main.cpp src/cesar.cpp src/neander.cpp src/ramses.cpp src/memory.cpp src/main/utils.cpp)
+set ( TEST_DRIVER "run_tests")
+add_subdirectory(tests)    # This will ask the tests to be generated
