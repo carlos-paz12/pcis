@@ -7,15 +7,17 @@
 
 #include "Instrucao.hpp"
 
+using byte = std::uint8_t;
+
 class Memoria {
 private:
-  std::vector<std::uint8_t> dados;
+  std::vector<byte> dados;
 
 public:
   Memoria() : dados(256) { /* empty */ }
 
   /**
-   * Lê o valor armazenado em um endereço específico da memória.
+   * @brief Lê o valor armazenado em um endereço específico da memória.
    *
    * Este método retorna o valor armazenado em um endereço fornecido. Caso o
    * endereço esteja fora do intervalo válido, uma exceção `std::out_of_range` é
@@ -27,10 +29,10 @@ public:
    *
    * @throws std::out_of_range Se o endereço fornecido for inválido.
    */
-  uint8_t read(uint8_t end) const;
+  byte ler(byte end) const;
 
   /**
-   * Escreve um valor em um endereço específico da memória.
+   * @brief Escreve um valor em um endereço específico da memória.
    *
    * Este método armazena o valor fornecido em um endereço especificado na
    * memória. Ele é utilizado para atualizar o conteúdo da memória em operações
@@ -39,7 +41,7 @@ public:
    * @param end O endereço na memória onde o valor será armazenado (0-255).
    * @param val Valor a ser armazenada na memória.
    */
-  void write(uint8_t end, uint8_t val);
+  void escreve(byte end, byte val);
 
   /**
    * @brief Carrega um programa na memória.
@@ -48,10 +50,9 @@ public:
    * dados) e os armazena nos endereços correspondentes da memória, começando do
    * endereço 0.
    *
-   * @param programa Um vetor de Instrucao contendo as instruções e dados do
-   * programa.
+   * @param programa Um vetor de Instrucao contendo as instruções e dados do programa.
    */
-  void load_program(const std::vector<Instrucao> &programa);
+  void carrega(const std::vector<Instrucao> &programa);
 };
 
 #endif /// MEMORY_H
