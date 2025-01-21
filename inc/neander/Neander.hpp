@@ -99,6 +99,7 @@ class Neander
 private:
   Memoria &memoria;
   PO po;
+  std::vector<int> registradores; // Adicionando os registradores
   PC pc;
 
 public:

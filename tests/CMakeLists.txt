@@ -4,6 +4,7 @@ add_executable(${TEST_DRIVER}
     main.cpp  # Arquivo principal de testes
     ${CMAKE_SOURCE_DIR}/src/neander/neander.cpp
     ${CMAKE_SOURCE_DIR}/src/neander/memoria.cpp
+    ${CMAKE_SOURCE_DIR}/src/neander/multiplexador.cpp
     ${CMAKE_SOURCE_DIR}/src/neander/instrucao.cpp
     ${CMAKE_SOURCE_DIR}/src/neander/ula.cpp
 )

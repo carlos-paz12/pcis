@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include "../inc/cesar/cesar.h"
 #include "../inc/neander/Neander.hpp"
-#include "../inc/ramses/ramses.h"
+//#include "../inc/ramses/ramses.h"
 
 enum ProcessorType
 {
@@ -48,17 +48,6 @@ void loadMemoryData(Memoria &memoria, const std::string &dataFile)
     std::cout << "Escrevendo " << value << " no endereço " << address << std::endl;
     memoria.escreve(address, value);
   }
-
-  // Exibir os dados da memória
-  std::cout << "+---------------------------+" << std::endl;
-  for (int i = 0; i < 256; ++i)
-  { 
-    int val_memory = memoria.ler(i);
-      
-    // Garantir que o valor da memória seja exibido corretamente
-    std::cout << "| R" << i << ": " << std::setw(22) << val_memory << " |" << std::endl;
-  }
-  std::cout << "+---------------------------+" << std::endl;
 }
 
 // Function to load instructions into memory
@@ -115,21 +104,17 @@ void loadMemoryInstructions(Memoria &memoria, const std::string &instrutionFile)
     {
       programa.push_back(Instrucao(Opcode::HLT, dataAddress));
     }
+      else if(opcode == "MUX")
+    {
+      programa.push_back(Instrucao(Opcode::MUX, dataAddress));
+    }
   }
 
   memoria.carrega(programa);
-  // Exibir os dados da memória
-  std::cout << "+---------------------------+" << std::endl;
-  for (int i = 0; i < 256; ++i)
-  {
-    int val_mem = memoria.ler(i);
-    // Garantir que o valor da memória seja exibido corretamente
-    std::cout << "| R" << i << ": " << std::setw(22) << val_mem << " |" << std::endl;
-  }
-  std::cout << "+---------------------------+" << std::endl;
 }
 
-int main()
+
+int main(int argc, char const *argv[])
 {
   // Select processor
   ProcessorType processor = NEANDER;
@@ -140,13 +125,14 @@ int main()
   }
 
   // Get file paths for data and instructions
-  std::string dataFile = "build/data.txt", instructionFile = "build/instructions.txt";
+  std::string dataFile = argv[1], instructionFile = argv[2];
   //std::cout << "Enter the data file path: ";
   // std::cin >> instructionFile;
   //std::cout << "Enter the instruction file path: ";
   
 
   Memoria memoria;
+
   loadMemoryData(memoria, dataFile);
   loadMemoryInstructions(memoria, instructionFile);
 

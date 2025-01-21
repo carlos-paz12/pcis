@@ -3,13 +3,12 @@
 
 #include <cstdint>
 
+using byte = std::uint8_t;
+
 class Multiplexador
 {
 public:
-    uint8_t selecionar(uint8_t entrada1, uint8_t entrada2, bool controle)
-    {
-        return controle ? entrada2 : entrada1;
-    }
+    byte selecionar(byte entrada1, byte entrada2, bool controle);
 };
 
 #endif // MULTIPLEXADOR_HPP
