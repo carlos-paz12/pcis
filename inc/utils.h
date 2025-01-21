@@ -1,11 +1,26 @@
-#ifndef UTILS_H
-#define UTILS_H
+#include "utils.h"
+#include <iostream>
 
-// Utility functions for the model simulator
+void printRegisters(int registers[], int size) {
+    std::cout << "Registers: ";
+    for (int i = 0; i < size; ++i) {
+        std::cout << registers[i] << " ";
+    }
+    std::cout << std::endl;
+}
 
-void printRegisters(int registers[], int size);
-void printMemory(int memory[], int size);
-void printFlags(int flags);
-void printExecutionTime(int cycles);
+void printMemory(int memory[], int size) {
+    std::cout << "Memory: ";
+    for (int i = 0; i < size; ++i) {
+        std::cout << memory[i] << " ";
+    }
+    std::cout << std::endl;
+}
 
-#endif // UTILS_H
+void printFlags(int flags) {
+    std::cout << "Flags: " << flags << std::endl;
+}
+
+void printExecutionTime(int cycles) {
+    std::cout << "Execution Time: " << cycles << " cycles" << std::endl;
+}
