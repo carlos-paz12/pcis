@@ -3,25 +3,32 @@
 
 #include <cstdint> /// std::uint8_t
 
-class Instrucao {
+using byte = std::uint8_t;
+
+class Instrucao
+{
 private:
-  std::uint8_t opcode;   ///!> Código de instrução.
-  std::uint8_t endereco; ///!> Endereço de dado.
+  /* !!!
+   * Por mais que `opcode` e `endereco` sejam declarados como bytes, na implementação
+   * desse projeto, cada um ocupa somente 4 bits de memória.
+   */
+  byte opcode;   ///!> Código de instrução.
+  byte endereco; ///!> Endereço de dado.
 
 public:
-  Instrucao(std::uint8_t opcode = std::uint8_t(), std::uint8_t endereco = std::uint8_t());
+  Instrucao(byte opcode = byte(), byte endereco = byte());
 
   Instrucao(const Instrucao &other);
 
   Instrucao &operator=(const Instrucao &other);
 
-  std::uint8_t to_uint8() const;
+  byte get_opcode();
 
-  static Instrucao from_uint8(uint8_t encoded);
+  byte get_endereco();
 
-  std::uint8_t get_opcode();
+  byte to_byte() const;
 
-  std::uint8_t get_endereco();
+  static Instrucao from_byte(byte encoded);
 };
 
 #endif /// INSTRUCAO_HPP
