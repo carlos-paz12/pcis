@@ -43,12 +43,12 @@ void PO::printstate()
     std::cout << "+---------------------------+" << std::endl;
 
     std::cout << "|       Registers:          |" << std::endl;
-   
-    for (int i = 0; i < 4; ++i)
     
+    for (int i = 0; i < 4; ++i){
+        int val_rem = memoria.ler(REM);
+        int val_rdm = memoria.ler(RDM);
         std::cout << "| R" << i << ": " << std::setw(22) <<  REM << " |" << std::endl;
         std::cout << "| R" << i << ": " << std::setw(22) <<  RDM << " |" << std::endl;
-        std::cout << "| R" << i << ": " << std::setw(22) <<  REM << " |" << std::endl;
     }
     std::cout << "+---------------------------+" << std::endl;
 
