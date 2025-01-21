@@ -3,22 +3,14 @@
 
 #include "../../inc/neander/ULA.hpp"
 
-std::uint8_t ULA::sum(const std::uint8_t a, const std::uint8_t b) { return (a + b) & 0xFF; }
+byte ULA::sum_operation(const byte x, const byte y) { return (x + y) & 0xFF; }
 
-std::uint8_t ULA::sub(const std::uint8_t a, const std::uint8_t b) { return (a - b) & 0xFF; }
+byte ULA::and_operation(const byte x, const byte y) { return (x & y); }
 
-std::uint8_t ULA::and_operation(const std::uint8_t a, const std::uint8_t b) { return (a & b); }
+byte ULA::or_operation(const byte x, const byte y) { return (x | y); }
 
-std::uint8_t ULA::or_operation(const std::uint8_t a, const std::uint8_t b) { return (a | b); }
+byte ULA::not_operation(const byte x) { return (~x); }
 
-std::uint8_t ULA::not_operation(const std::uint8_t a) { return (~a); }
-
-std::uint8_t ULA::max(const std::vector<std::uint8_t> &vec)
-{
-  std::uint8_t m_max{vec[0]};
-  for (std::uint8_t i{1}; i < vec.size(); ++i)
-    m_max = vec[i] > m_max ? vec[i] : m_max;
-  return m_max;
-}
+byte ULA::y_operation(const byte x, const byte y) { return y; }
 
 #endif
