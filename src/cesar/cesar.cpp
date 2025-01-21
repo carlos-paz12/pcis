@@ -1,10 +1,10 @@
 #ifndef CESAR_CPP
 #define CESAR_CPP
 
-#include "../inc/cesar.h"
-#include "../inc/memory.h"
+#include "../../inc/cesar/cesar.h"
+#include "../../inc/cesar/Memoria.hpp"
 
-Memory memory;
+Memoria memory;
 
 // Implementação das operações aritméticas
 unsigned char Cesar::add8Bits(unsigned char a, unsigned char b) {

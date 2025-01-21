@@ -3,26 +3,26 @@
 
 #include <cstdint> /// std::uint8_t
 
-class Instrucao
-{
+class Instrucao {
 private:
-    std::uint8_t opcode;   ///!> Código de instrução.
-    std::uint8_t endereco; ///!> Endereço de dado.
+  std::uint8_t opcode;   ///!> Código de instrução.
+  std::uint8_t endereco; ///!> Endereço de dado.
 
 public:
-    Instrucao(std::uint8_t opcode = std::uint8_t(), std::uint8_t endereco = std::uint8_t());
+  Instrucao(std::uint8_t opcode = std::uint8_t(),
+            std::uint8_t endereco = std::uint8_t());
 
-    Instrucao(const Instrucao &other);
+  Instrucao(const Instrucao &other);
 
-    Instrucao &operator=(const Instrucao &other);
+  Instrucao &operator=(const Instrucao &other);
 
-    constexpr std::uint8_t to_uint8() const;
+  constexpr std::uint8_t to_uint8() const;
 
-    static Instrucao from_uint8(uint8_t encoded);
+  static Instrucao from_uint8(uint8_t encoded);
 
-    std::uint8_t Instrucao::get_opcode();
+  std::uint8_t Instrucao::get_opcode();
 
-    std::uint8_t Instrucao::get_endereco();
+  std::uint8_t Instrucao::get_endereco();
 };
 
 #endif /// INSTRUCAO_HPP
