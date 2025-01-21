@@ -88,29 +88,17 @@ void Neander::LDA(uint8_t &end)
 
 void Neander::ADD(uint8_t &end)
 {
-  AC = ula.sum(
-      AC, memoria.read(end)); ///[!] Soma o valor armazenado em memória com AC.
-}
-
-void Neander::SUB(uint8_t &end)
-{
-  AC = ula.sub(
-      AC,
-      memoria.read(end)); ///[!] Subtrai o valor armazenado em memória de AC.
+  AC = ula.sum(AC, memoria.read(end)); ///[!] Soma o valor armazenado em memória com AC.
 }
 
 void Neander::AND(uint8_t &end)
 {
-  AC = ula.and_operation(
-      AC, memoria.read(
-              end)); ///[!] Opera AND bit a bit entre AC e valor da memória.
+  AC = ula.and_operation(AC, memoria.read(end)); ///[!] Opera AND bit a bit entre AC e valor da memória.
 }
 
 void Neander::OR(uint8_t &end)
 {
-  AC = ula.or_operation(
-      AC,
-      memoria.read(end)); ///[!] Opera OR bit a bit entre AC e valor da memória.
+  AC = ula.or_operation(AC, memoria.read(end)); ///[!] Opera OR bit a bit entre AC e valor da memória.
 }
 
 void Neander::NOT([[maybe_unused]] uint8_t &end)
@@ -149,7 +137,7 @@ void Neander::fetch_decode_execute()
   while (true)
   {
     fetch();
-    decode();                        ///[!] Chama a função decode para processar a instrução.
+    decode(); ///[!] Chama a função decode para processar a instrução.
     if (RI.get_opcode() == Opcode::HLT)
       break;
   }
