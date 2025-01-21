@@ -1,2 +1,2 @@
 Processor: Neander
-Execution time: 24 cycles
+Execution time: 95 cycles
