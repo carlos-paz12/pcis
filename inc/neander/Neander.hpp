@@ -10,10 +10,7 @@
 
 class Neander {
 private:
-  enum Flag {
-    FLAG_N, ///!> Flag N (negativo) é ativado se o resultado for negativo.
-    FLAG_Z  ///!> Flag Z (zero) é ativado se o resultado for zero.
-  };
+  Memoria &memoria;
 
   uint32_t ciclos; ///!> Contador de ciclos
   uint8_t AC;      ///!> Registrador acumulador (8 bits).
@@ -21,9 +18,14 @@ private:
   uint8_t PC;      ///!> Contador de programa (8 bits).
   uint8_t RDM;     ///!> Dado a ser armazenado na memória.
   Instrucao RI;    ///!> Registrador de instrução.
-  Memoria memoria;
 
   ULA ula;   ///!> Unidade lógica e aritmética.
+  
+  enum Flag {
+    FLAG_N, ///!> Flag N (negativo) é ativado se o resultado for negativo.
+    FLAG_Z  ///!> Flag Z (zero) é ativado se o resultado for zero.
+  };
+  
   Flag flag; ///!> Flags de controle (indicador de estado).
 
   ///[!] Método para buscar a instrução na memória.
@@ -33,7 +35,7 @@ private:
 
   void execute(void (Neander::*f)(uint8_t &end));
 
-  void STA(uint8_t &end);
+  void STA(uint8_t end);
 
   void LDA(uint8_t &end);
 
@@ -54,9 +56,9 @@ private:
   void JZ(uint8_t &end);
 
 public:
-  Neander();
+  Neander(Memoria &memoria);
 
-  void fetch_decode_execute(Memoria &memoria);
+  void fetch_decode_execute();
 
   void reset();
 

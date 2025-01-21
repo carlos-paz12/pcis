@@ -3,12 +3,10 @@
 
 #include "../../inc/neander/Instrucao.hpp"
 
-Instrucao::Instrucao(std::uint8_t opcode = std::uint8_t(),
-                     std::uint8_t endereco = std::uint8_t())
+Instrucao::Instrucao(std::uint8_t opcode, std::uint8_t endereco)
     : opcode(opcode), endereco(endereco) { /* empty */ }
 
-Instrucao::Instrucao(const Instrucao &other)
-    : opcode(other.opcode), endereco(other.endereco) { /* empty */ }
+Instrucao::Instrucao(const Instrucao &other) : opcode(other.opcode), endereco(other.endereco) { /* empty */ }
 
 Instrucao &Instrucao::operator=(const Instrucao &other) {
   if (this != &other) {
@@ -18,7 +16,7 @@ Instrucao &Instrucao::operator=(const Instrucao &other) {
   return (*this);
 }
 
-constexpr std::uint8_t Instrucao::to_uint8() const {
+std::uint8_t Instrucao::to_uint8() const {
   return (opcode << 4) | (endereco & 0x0F);
 }
 

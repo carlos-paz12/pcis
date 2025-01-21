@@ -9,14 +9,13 @@ private:
   std::uint8_t endereco; ///!> Endereço de dado.
 
 public:
-  Instrucao(std::uint8_t opcode = std::uint8_t(),
-            std::uint8_t endereco = std::uint8_t());
+  Instrucao(std::uint8_t opcode = std::uint8_t(), std::uint8_t endereco = std::uint8_t());
 
   Instrucao(const Instrucao &other);
 
   Instrucao &operator=(const Instrucao &other);
 
-  constexpr std::uint8_t to_uint8() const;
+  std::uint8_t to_uint8() const;
 
   static Instrucao from_uint8(uint8_t encoded);
 

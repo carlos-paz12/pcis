@@ -3,19 +3,12 @@
 
 #include "../../inc/neander/Neander.hpp"
 
-Neander::Neander() : ciclos(0), AC(0), REM(0), PC(0), flag(FLAG_Z) {}
+Neander::Neander(Memoria& memoria) :  memoria(memoria), ciclos(0), AC(0), REM(0), PC(0), flag(FLAG_Z) {}
 
 void Neander::fetch() {
-  REM =
-      PC; ///[!] Obtém o endereço de memória atual do contador de programa (PC).
-  std::cout << "REM = " << REM << ", PC = " << PC << "\n";
-  RDM = memoria.read(
-      REM); ///[!] Lê o valor da memória no endereço armazenado em REM.
-  std::cout << "RDM (Instrução lida): " << (int)RDM
-            << std::endl;          // Print do valor lido
+  REM = PC; ///[!] Obtém o endereço de memória atual do contador de programa (PC).
+  RDM = memoria.read(REM); ///[!] Lê o valor da memória no endereço armazenado em REM.
   RI = Instrucao::from_uint8(RDM); ///[!] Decodifica a instrução lida.
-  std::cout << "Opcode decodificado: " << (int)RI.opcode
-            << std::endl; // Print do opcode
   ++PC; ///[!] Incrementa o contador de programa para a próxima instrução.
   ++ciclos; ///[!] Incrementa o contador de ciclos na execução da instrução.
   decode(); ///[!] Chama a função decode para processar a instrução.
@@ -29,7 +22,7 @@ void Neander::decode() {
     /* Nada */
     break;
   case Opcode::STA_END:
-    execute(&Neander::STA);
+    STA(RI.get_endereco());
     break;
   case Opcode::LDA_END:
     execute(&Neander::LDA);
@@ -63,7 +56,8 @@ void Neander::decode() {
 void Neander::execute(void (Neander::*f)(uint8_t &end)) {
   ++ciclos; ///[!] Incrementa o contador de ciclos na execução da instrução.
 
-  (this->*f)(RI.get_endereco()); ///[!] Chama o método de instância no contexto
+  auto end = RI.get_endereco();
+  (this->*f)(end); ///[!] Chama o método de instância no contexto
                                  ///da classe Neander.
 
   ///[!] Atualiza as flags conforme o valor de AC
@@ -76,14 +70,13 @@ void Neander::execute(void (Neander::*f)(uint8_t &end)) {
   }
 }
 
-void Neander::STA(uint8_t &end) {
+void Neander::STA(uint8_t end) {
+  RDM = end;
   memoria.write(end, AC); ///[!] Armazena o valor do AC no endereço da memória.
 }
 
 void Neander::LDA(uint8_t &end) {
   AC = memoria.read(end); ///[!] Carrega o valor da memória no AC.
-  std::cout << "LDA: Carregado AC = " << (int)AC << " de memória no endereço "
-            << (int)end << std::endl;
 }
 
 void Neander::ADD(uint8_t &end) {
@@ -135,8 +128,7 @@ void Neander::reset() {
   ciclos = 0;
 }
 
-void Neander::fetch_decode_execute(Memoria &memoria) {
-  this->memoria = memoria;
+void Neander::fetch_decode_execute() {
   while (true) {
     fetch();
 
