@@ -35,7 +35,7 @@ private:
 
   void execute(void (Neander::*f)(uint8_t &end));
 
-  void STA(uint8_t end);
+  void STA(uint8_t &end);
 
   void LDA(uint8_t &end);
 
