@@ -1,0 +1,4 @@
+0 LDA 0
+1 ADD 1
+2 STA 2
+3 HLT 0

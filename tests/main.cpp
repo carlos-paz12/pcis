@@ -10,9 +10,20 @@ void soma()
   Memoria memoria;
   Neander processador(memoria);
 
-  memoria.write(5, 300);
+  memoria.write(5, 10);
   memoria.write(6, 20);
 
+  // A GENTE FAZ A PC POR AQUI OU FAZ DENTRO DE CADA PROCESSADOR? Porque a gente chama dentro do main principal a função quando ele escolher o processador
+  // Para cada processador
+  // Cada processador tem um conjunto de instruções diferentes, e nos outros dois a memória é de 16 bits.
+  // O Neander é a base aí a gente consegue usar ela para fazer os outros dois, os outros dois é só ctrl c ctrl v
+  // O que a gente realmente precisa na PC? >  Não sei direito :/   KKKKKKKKKKKKKKKKKKKKKKKKK  OK
+
+  // por enquanto, faz só essa prte de Criar arquivos com as instrucoes
+  // cria o algoritmo que le esse arquivo e cria varios objetos "Instrucao"
+  // e escreve na memoria
+
+  // Ok, vou fzr ent!
   memoria.write(0, Instrucao(Opcode::LDA_END, 5).to_uint8()); // AC = 10
   memoria.write(1, Instrucao(Opcode::ADD_END, 6).to_uint8()); // AC = AC + 20 = 30
   memoria.write(2, Instrucao(Opcode::STA_END, 7).to_uint8()); // MEM(7) = 30

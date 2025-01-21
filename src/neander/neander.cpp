@@ -3,149 +3,185 @@
 
 #include "../../inc/neander/Neander.hpp"
 
-Neander::Neander(Memoria &memoria) : memoria(memoria), ciclos(0), AC(0), REM(0), PC(0), flag(FLAG_Z) {}
+Neander::Neander(Memoria &memoria) : memoria(memoria), po(memoria, pc), pc(memoria, po) {}
 
-void Neander::fetch()
+void Neander::fetch_decode_execute()
 {
-  REM = PC;                        ///[!] Obtém o endereço de memória atual do contador de programa (PC).
-  RDM = memoria.read(REM);         ///[!] Lê o valor da memória no endereço armazenado em REM.
-  RI = Instrucao::from_uint8(RDM); ///[!] Decodifica a instrução lida.
-  ++PC;                            ///[!] Incrementa o contador de programa para a próxima instrução.
-  ++ciclos;                        ///[!] Incrementa o contador de ciclos na execução da instrução.
+    po.fetch();
+    po.decode();
+    po.printstate();
+    po.execute();
 }
 
-void Neander::decode()
+void Neander::print()
 {
-  ++ciclos; ///[!] Incrementa o contador de ciclos na execução da instrução.
-
-  switch (RI.get_opcode())
-  {
-  case Opcode::NOP:
-    /* Nada */
-    break;
-  case Opcode::STA_END:
-    execute(&Neander::STA);
-    break;
-  case Opcode::LDA_END:
-    execute(&Neander::LDA);
-    break;
-  case Opcode::ADD_END:
-    execute(&Neander::ADD);
-    break;
-  case Opcode::AND_END:
-    execute(&Neander::AND);
-    break;
-  case Opcode::OR_END:
-    execute(&Neander::OR);
-    break;
-  case Opcode::NOT:
-    execute(&Neander::NOT);
-    break;
-  case Opcode::JMP_END:
-    execute(&Neander::JMP);
-    break;
-  case Opcode::JN_END:
-    execute(&Neander::JN);
-    break;
-  case Opcode::JZ_END:
-    execute(&Neander::JZ);
-    break;
-  default: ///[!] Opcode padrão é HLT.
-    break; ///[!] Fim de ciclo.
-  }
+    po.printstate();
 }
 
-void Neander::execute(void (Neander::*f)(uint8_t &end))
+///=======================================///
+/// Implementação da Parte Operativa (PO) ///
+///=======================================///
+
+void PO::printstate()
 {
-  ++ciclos; ///[!] Incrementa o contador de ciclos na execução da instrução.
+    std::cout << "+---------------------------+" << std::endl;
+    std::cout << "|         CPU STATE         |" << std::endl;
+    std::cout << "+---------------------------+" << std::endl;
+    std::cout << "| PC: " << std::setw(24) << (int)pc.get_pc() << " |" << std::endl;
+    std::cout << "| IR: " << std::setw(24) << (int)RI.to_uint8() << " |" << std::endl;
+    std::cout << "| Flags: " << std::setw(20) << std::bitset<8>(/* we had to pick the flag*/().to_uint8()) << " |" << std::endl;
+    std::cout << "| AC: " << std::setw(25) << (int)AC << " |" << std::endl;
+    std::cout << "+---------------------------+" << std::endl;
 
-  auto end = RI.get_endereco();
-  (this->*f)(end); ///[!] Chama o método de instância no contexto
-                   /// da classe Neander.
+    std::cout << "|       Registers:          |" << std::endl;
+    for (int i = 0; i < 4; ++i)
+    {
+        std::cout << "| R" << i << ": " << std::setw(22) << (int)memoria.read(i) << " |" << std::endl;
+    }
+    std::cout << "+---------------------------+" << std::endl;
 
-  ///[!] Atualiza as flags conforme o valor de AC
-  if (AC & 0x80) ///[!] Se o bit mais significativo de AC for 1, o número é
-                 /// negativo (complemento de dois)
-  {
-    flag = Flag::FLAG_N; ///[!] Flag N ativada se o AC for negativo.
-  }
-  else if (AC == 0)
-  {
-    flag = Flag::FLAG_Z; ///[!] Flag Z ativada se o AC for zero.
-  }
+    std::cout << "|         Memory:           |" << std::endl;
+    for (int i = 0; i < 256; ++i)
+    {
+        std::cout << "| M" << i << ": " << std::setw(22) << (int)memoria.read(i) << " |" << std::endl;
+    }
+    std::cout << "+---------------------------+" << std::endl;
 }
 
-void Neander::STA(uint8_t &end)
+void PO::STA()
 {
-  RDM = end;
-  memoria.write(end, AC); ///[!] Armazena o valor do AC no endereço da memória.
+    REM = RI.get_endereco();
+    memoria.write(REM, AC); ///[!] Armazena o valor do AC no endereço REM de memória.
 }
 
-void Neander::LDA(uint8_t &end)
+void PO::LDA()
 {
-  AC = memoria.read(end); ///[!] Carrega o valor da memória no AC.
+    REM = RI.get_endereco();
+    AC = memoria.read(REM); ///[!] Carrega o valor da memória em REM no AC.
 }
 
-void Neander::ADD(uint8_t &end)
+void PO::ADD()
 {
-  AC = ula.sum(AC, memoria.read(end)); ///[!] Soma o valor armazenado em memória com AC.
+    REM = RI.get_endereco();
+    RDM = memoria.read(REM);
+    AC = ula.sum(AC, RDM); ///[!] Soma o valor da memória em RDM com o AC.
 }
 
-void Neander::AND(uint8_t &end)
+void PO::AND()
 {
-  AC = ula.and_operation(AC, memoria.read(end)); ///[!] Opera AND bit a bit entre AC e valor da memória.
+    REM = RI.get_endereco();
+    RDM = memoria.read(REM);
+    AC = ula.and_operation(AC, RDM); ///[!] Opera AND entre AC e memória.
 }
 
-void Neander::OR(uint8_t &end)
+void PO::OR()
 {
-  AC = ula.or_operation(AC, memoria.read(end)); ///[!] Opera OR bit a bit entre AC e valor da memória.
+    REM = RI.get_endereco();
+    RDM = memoria.read(REM);
+    AC = ula.or_operation(AC, RDM); ///[!] Opera OR entre AC e memória.
 }
 
-void Neander::NOT([[maybe_unused]] uint8_t &end)
+void PO::NOT()
 {
-  AC = ula.not_operation(AC); ///[!] Inverte os bits de AC.
+    AC = ula.not_operation(AC); ///[!] Inverte os bits do AC.
 }
 
-void Neander::JMP(uint8_t &end)
+void PO::JMP()
 {
-  PC = end; ///[!] Desvia incondicionalmente para o endereço "end".
+    REM = RI.get_endereco();
+    PO::pc.carga_pc(REM); ///[!] Desvia para o endereço indicado pela instrução.
 }
 
-void Neander::JN(uint8_t &end)
+void PO::JN()
 {
-  if (AC & 0x80) ///[!] Se AC for negativo (bit de sinal é 1), realiza o salto.
-    PC = end;    ///[!] Desvia para o endereço "end".
+    if (AC & 0x80) ///[!] Se AC for negativo (bit de sinal 1), realiza o salto.
+    {
+        REM = RI.get_endereco();
+        PO::pc.carga_pc(REM);
+    }
 }
 
-void Neander::JZ(uint8_t &end)
+void PO::JZ()
 {
-  if (AC == 0) ///[!] Se AC for zero, realiza o salto.
-    PC = end;  ///[!] Desvia para o endereço "end".
+    if (AC == 0) ///[!] Se AC for zero, realiza o salto.
+    {
+        REM = RI.get_endereco();
+        PO::pc.carga_pc(REM);
+    }
 }
 
-void Neander::reset()
+void PO::reset()
 {
-  AC = 0;
-  REM = 0;
-  PC = 0;
-  flag = FLAG_Z;
-  ciclos = 0;
+    AC = 0;
+    REM = 0;
+    RDM = 0;
+    RI = Instrucao();
+    PO::pc.carga_pc(0);
+}
+
+void PO::fetch()
+{
+    REM = pc.get_pc();               // O endereço de memória atual é o valor do contador de programa
+    RDM = memoria.read(REM);         // Lê o valor da memória no endereço de REM
+    RI = Instrucao::from_uint8(RDM); // Decodifica a instrução lida
+    pc.incrementa_pc();              // Avança para o próximo endereço de memória
+    pc.incrementa_cc();              // Incrementa o contador de ciclos
+}
+
+void Neander::PC::decode()
+{
+    switch (RI.get_opcode())
+    {
+    case Opcode::NOP:
+        // Nenhuma operação
+        break;
+    case Opcode::STA_END:
+        PO::STA(); // Chama a operação STA
+        break;
+    case Opcode::LDA_END:
+        PO::LDA(); // Chama a operação LDA
+        break;
+    case Opcode::ADD_END:
+        PO::ADD(); // Chama a operação ADD
+        break;
+    case Opcode::AND_END:
+        PO::AND(); // Chama a operação AND
+        break;
+    case Opcode::OR_END:
+        PO::OR(); // Chama a operação OR
+        break;
+    case Opcode::NOT:
+        PO::NOT(); // Chama a operação NOT
+        break;
+    case Opcode::JMP_END:
+        PO::JMP(); // Chama a operação JMP
+        break;
+    case Opcode::JN_END:
+        PO::JN(); // Chama a operação JN
+        break;
+    case Opcode::JZ_END:
+        PO::JZ(); // Chama a operação JZ
+        break;
+    default:
+        // Caso padrão é HALT (não há ação)
+        break;
+    }
+}
+
+void Neander::PC::execute()
+{
+    // Em caso de alguma execução final ou adicional que se precise fazer
 }
 
 void Neander::fetch_decode_execute()
 {
-  while (true)
-  {
-    fetch();
-    decode(); ///[!] Chama a função decode para processar a instrução.
-    if (RI.get_opcode() == Opcode::HLT)
-      break;
-  }
+    while (true)
+    {
+        fetch();
+        decode();
+        if (RI.get_opcode() == Opcode::HLT)
+            break; // Interrompe a execução quando o código de operação for HALT
+    }
 }
 
-std::string Neander::to_string()
-{
-  // TODO
-}
-
-#endif /// NEANDER_CPP
+#endif

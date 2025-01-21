@@ -3,66 +3,110 @@
 
 #include <bits/stdc++.h>
 
+#include "Opcode.hpp"
+#include "Flag.hpp"
 #include "Instrucao.hpp"
 #include "Memoria.hpp"
-#include "Opcode.hpp"
 #include "ULA.hpp"
 
-class Neander {
-private:
+class PC;
+
+class PO /// Parte Operativa
+{
   Memoria &memoria;
+  PC &pc;
 
-  uint32_t ciclos; ///!> Contador de ciclos
-  uint8_t AC;      ///!> Registrador acumulador (8 bits).
-  uint8_t REM;     ///!> Representa um endereço de memória (8 bits).
-  uint8_t PC;      ///!> Contador de programa (8 bits).
-  uint8_t RDM;     ///!> Dado a ser armazenado na memória.
-  Instrucao RI;    ///!> Registrador de instrução.
+  uint8_t AC;   ///!> Registrador acumulador.
+  uint8_t REM;  ///!> Registrador que armazena o endereço de uma posição de memória (registrador de endereço de memória)
+  uint8_t RDM;  ///!> Registrador que armazena o dado que será lido ou escrito na memória (registrador de dados de memória).
+  Instrucao RI; ///!> Registrador que armazena instrução a ser executada (registrador de instruções).
 
-  ULA ula;   ///!> Unidade lógica e aritmética.
-  
-  enum Flag {
-    FLAG_N, ///!> Flag N (negativo) é ativado se o resultado for negativo.
-    FLAG_Z  ///!> Flag Z (zero) é ativado se o resultado for zero.
-  };
-  
-  Flag flag; ///!> Flags de controle (indicador de estado).
+  ULA ula; ///!> Unidade Lógica e Aritmética.
 
-  ///[!] Método para buscar a instrução na memória.
+  void STA();
+
+  void LDA();
+
+  void ADD();
+
+  void AND();
+
+  void OR();
+
+  void NOT();
+
+  void JMP();
+
+  void JN();
+
+  void JZ();
+
+  void reset();
+
+public:
+  PO(Memoria &memoria, PC &pc);
+
   void fetch();
 
   void decode();
 
-  void execute(void (Neander::*f)(uint8_t &end));
+  void execute();
 
-  void STA(uint8_t &end);
+  void printstate();
+};
 
-  void LDA(uint8_t &end);
+class PC /// Parte de Controle
+{
+  Memoria &memoria;
+  PO &po;
 
-  void ADD(uint8_t &end);
+  uint8_t pc; ///!> Registrador que armazena o endereço da próxima instrução a ser executada (contador de programa).
+  uint8_t cc; ///!> Registrador que armazena a quantidade de ciclos do processador (contador de ciclos).
 
-  void SUB(uint8_t &end);
+  Flag flag; ///!> Flag de controle.
 
-  void AND(uint8_t &end);
+public:
+  PC(Memoria &memoria, PO &po);
 
-  void OR(uint8_t &end);
+  uint8_t get_pc()
+  {
+    return pc;
+  }
 
-  void NOT([[maybe_unused]] uint8_t &end);
+  uint8_t incrementa_pc()
+  {
+    return ++pc;
+  }
 
-  void JMP(uint8_t &end);
+  uint8_t carga_pc(uint8_t val)
+  {
+    pc = val;
+  }
 
-  void JN(uint8_t &end);
+  uint8_t get_cc()
+  {
+    return ++cc;
+  }
 
-  void JZ(uint8_t &end);
+  uint8_t incrementa_cc()
+  {
+    return ++cc;
+  }
+};
+
+class Neander
+{
+private:
+  Memoria &memoria;
+  PO po;
+  PC pc;
 
 public:
   Neander(Memoria &memoria);
 
   void fetch_decode_execute();
 
-  void reset();
-
-  std::string to_string();
+  void print();
 };
 
-#endif // NEANDER_H
+#endif /// NEANDER_H
