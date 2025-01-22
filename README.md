@@ -37,17 +37,15 @@ instruction-set-simulator
 - **Cesar**: Methods to add and subtract 8-bit and 16-bit variables, and determine the largest value in a 32-position array.
 - **Neander**: Methods to add and subtract 8-bit variables, add 16-bit variables, and determine the largest value in a 32-position array.
 - **Ramses**: Methods to add and subtract 8-bit and 16-bit variables, determine the largest value in a 32-position array, and call the 16-bit addition subroutine.
-- **Utils**: Utility functions for printing registers, memory, flags, and execution time.
 
 ## Compilation Instructions
 
 To compile the project, use CMake. Run the following commands in the terminal:
 
 ```bash
-mkdir build
-cd build
-cmake ..
-make
+cmake -S . -B build
+cmake --build build
+./build/pcis
 ```
 
 ## Usage Instructions
