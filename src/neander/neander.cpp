@@ -17,51 +17,13 @@ void Neander::fetch_decode_execute()
         po.fetch();
         po.decode();
         po.execute();
+
         std::cout << "\n\n";
         memoria.print();
         std::cout << "\n\n";
     }
     std::cout << "end\n";
     // po.printstate();
-}
-
-void Neander::print()
-{
-    po.printstate();
-}
-
-///=======================================///
-/// Implementação da Parte Operativa (PO) ///
-///=======================================///
-void PO::printstate()
-{
-    std::cout << "+---------------------------+" << std::endl;
-    std::cout << "|         CPU STATE         |" << std::endl;
-    std::cout << "+---------------------------+" << std::endl;
-    std::cout << "| PC: " << std::setw(24) << (int)pc.get_pc() << " |" << std::endl;
-    std::cout << "| IR: " << std::setw(24) << RI.get_opcode() << " |" << std::endl;
-    // std::cout << "| Flags: " << std::setw(20) << std::bitset<8>(/* we had to pick the flag*/ ().to_uint8()) << " |" << std::endl;
-    std::cout << "| AC: " << std::setw(25) << (int)AC << " |" << std::endl;
-    std::cout << "+---------------------------+" << std::endl;
-
-    std::cout << "|       Registers:          |" << std::endl;
-
-    for (int i = 0; i < 4; ++i)
-    {
-        int val_rem = memoria.ler(REM);
-        int val_rdm = memoria.ler(RDM);
-        std::cout << "| R" << i << ": " << std::setw(22) << REM << " |" << std::endl;
-        std::cout << "| R" << i << ": " << std::setw(22) << RDM << " |" << std::endl;
-    }
-    std::cout << "+---------------------------+" << std::endl;
-
-    std::cout << "|         Memory:           |" << std::endl;
-    for (int i = 0; i < 256; ++i)
-    {
-        int val_mem = memoria.ler(i);
-        std::cout << "| M" << i << ": " << std::setw(22) << val_mem << " |" << std::endl;
-    }
-    std::cout << "+---------------------------+" << std::endl;
 }
 
 void PO::reset()
@@ -180,6 +142,9 @@ void PO::ADD()
 
     AC = ula.sum_operation(AC, RDM); ///[!] Soma o valor da memória em RDM com o AC.
     std::cout << "\t\tAC <- AC + RDM\t; AC = " << (int)AC << '\n';
+
+    pc.flag = ula.get_flag();
+    std::cout << "\t\tflag <- " << (pc.flag == 0 ? 'N' : 'Z') << '\n';
 }
 
 void PO::AND()
@@ -189,6 +154,9 @@ void PO::AND()
 
     AC = ula.and_operation(AC, RDM); ///[!] Opera AND entre AC e memória.
     std::cout << "\t\tAC <- AC and MEM(RDM)\t; AC = " << (int)AC << '\n';
+
+    pc.flag = ula.get_flag();
+    std::cout << "\t\tflag <- " << (pc.flag == 0 ? 'N' : 'Z') << '\n';
 }
 
 void PO::OR()
@@ -198,6 +166,9 @@ void PO::OR()
 
     AC = ula.or_operation(AC, RDM); ///[!] Opera OR entre AC e memória.
     std::cout << "\t\tAC <- AC or RDM\t; AC = " << (int)AC << '\n';
+
+    pc.flag = ula.get_flag();
+    std::cout << "\t\tflag <- " << (pc.flag == 0 ? 'N' : 'Z') << '\n';
 }
 
 void PO::NOT()
@@ -205,6 +176,9 @@ void PO::NOT()
     std::cout << "\t\tAC <- ~AC\t";
     AC = ula.not_operation(AC); ///[!] Inverte os bits do AC.
     std::cout << "; AC = " << (int)AC << '\n';
+
+    pc.flag = ula.get_flag();
+    std::cout << "\t\tflag <- " << (pc.flag == 0 ? 'N' : 'Z') << '\n';
 }
 
 void PO::JMP()

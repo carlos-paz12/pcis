@@ -78,7 +78,7 @@ public:
     return ++pc;
   }
 
-  byte carga_pc(uint8_t val)
+  void carga_pc(uint8_t val)
   {
     pc = val;
   }

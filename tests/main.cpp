@@ -1,7 +1,11 @@
-#include <bits/stdc++.h>
-#include "../inc/cesar/cesar.h"
+#include <iostream>
+#include <fstream>
+
 #include "../inc/neander/Neander.hpp"
+// #include "../inc/cesar/cesar.h"
 // #include "../inc/ramses/ramses.h"
+
+using str = std::string;
 
 enum ProcessorType
 {
@@ -14,7 +18,7 @@ enum ProcessorType
 // Function to select the processor
 ProcessorType select_p()
 {
-  std::string choice;
+  str choice{};
   std::cout << "Select the processor you want to execute (neander, cesar, ramses): ";
   std::cin >> choice;
 
@@ -36,7 +40,7 @@ ProcessorType select_p()
   }
 }
 
-void load_memory_data(Memoria &memoria, const std::string &data_file)
+void load_memory_data(Memoria &memoria, const str &data_file)
 {
   std::ifstream infile(data_file);
   int address, value;
