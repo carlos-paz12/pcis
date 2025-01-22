@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include "../inc/cesar/cesar.h"
 #include "../inc/neander/Neander.hpp"
-//#include "../inc/ramses/ramses.h"
+// #include "../inc/ramses/ramses.h"
 
 enum ProcessorType
 {
@@ -104,7 +104,7 @@ void loadMemoryInstructions(Memoria &memoria, const std::string &instrutionFile)
     {
       programa.push_back(Instrucao(Opcode::HLT, dataAddress));
     }
-      else if(opcode == "MUX")
+    else if (opcode == "MUX")
     {
       programa.push_back(Instrucao(Opcode::MUX, dataAddress));
     }
@@ -112,7 +112,6 @@ void loadMemoryInstructions(Memoria &memoria, const std::string &instrutionFile)
 
   memoria.carrega(programa);
 }
-
 
 int main(int argc, char const *argv[])
 {
@@ -126,10 +125,9 @@ int main(int argc, char const *argv[])
 
   // Get file paths for data and instructions
   std::string dataFile = argv[1], instructionFile = argv[2];
-  //std::cout << "Enter the data file path: ";
-  // std::cin >> instructionFile;
-  //std::cout << "Enter the instruction file path: ";
-  
+  // std::cout << "Enter the data file path: ";
+  //  std::cin >> instructionFile;
+  // std::cout << "Enter the instruction file path: ";
 
   Memoria memoria;
 
@@ -162,16 +160,13 @@ int main(int argc, char const *argv[])
     return 1;
   }
 
-
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = end - start;
   int cycles = static_cast<int>(elapsed.count() * 1e6); // Calculate time in microseconds
 
   // Output results to a file
   std::ofstream outfile("data/time_results.txt");
-  outfile << "Processor: " << (processor == CESAR ? "Cesar" : processor == NEANDER ? "Neander"
-                                                                                   : "Ramses")
-          << std::endl;
+  outfile << "Processor: " << (processor == CESAR ? "Cesar" : processor == NEANDER ? "Neander" : "Ramses") << std::endl;
   outfile << "Execution time: " << cycles << " cycles" << std::endl;
   outfile.close();
 
