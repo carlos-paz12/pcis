@@ -1,2 +1,0 @@
-Processor: ramses
-Execution time: 37 cycles

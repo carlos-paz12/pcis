@@ -1,7 +1,7 @@
 #ifndef CESAR_CPP
 #define CESAR_CPP
 
-#include "../../inc/cesar/cesar.h"
+#include "../../inc/cesar/Cesar.hpp"
 #include "../../inc/cesar/Memoria.hpp"
 
 Memoria memory;

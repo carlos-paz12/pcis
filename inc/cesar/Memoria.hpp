@@ -1,7 +1,6 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
-#include <cstdint> /// std::uint8_t
 #include <stdexcept>
 #include <vector>
 
@@ -9,7 +8,7 @@
 
 class Memoria {
 private:
-  std::vector<std::uint8_t> dados;
+  std::vector<int> dados;
 
 public:
   Memoria() : dados(256) { /* empty */ }
@@ -27,7 +26,7 @@ public:
    *
    * @throws std::out_of_range Se o endereço fornecido for inválido.
    */
-  uint8_t read(uint8_t end) const;
+  int read(int end) const;
 
   /**
    * Escreve um valor em um endereço específico da memória.
@@ -39,7 +38,7 @@ public:
    * @param end O endereço na memória onde o valor será armazenado (0-255).
    * @param val Valor a ser armazenada na memória.
    */
-  void write(uint8_t end, uint8_t val);
+  void write(int end, int val);
 
   /**
    * @brief Carrega um programa na memória.

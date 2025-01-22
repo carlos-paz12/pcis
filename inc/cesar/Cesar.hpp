@@ -1,13 +1,28 @@
-#ifndef CESAR_H
-#define CESAR_H
+#ifndef CESAR_HPP
+#define CESAR_HPP
 
-#include <functional>
-#include <iostream>
-#include <vector>
+#include "AddressingMode.hpp"
+#include "Cache.hpp"
+#include "Clock.hpp"
+#include "Flag.hpp"
+#include "Instruction.hpp"
+#include "Memoria.hpp"
+#include "Opcode.hpp"
+#include "PipelineStage.hpp"
+#include "ULA.hpp"
 
-class Cesar {
+typedef uint8_t Registrador;
+
+class Cesar
+{
+  Registrador R1;
+  Registrador R2;
+  Registrador AC; // Registrador acumulador (AC)
+
 public:
-  // Métodos básicos
+  // Construtor para inicializar os registradores
+  Cesar() : R1(0), R2(0), AC(0) {}
+  
   static unsigned char add8Bits(unsigned char a, unsigned char b);
   static unsigned char subtract8Bits(unsigned char a, unsigned char b);
   static unsigned char multiply8Bits(unsigned char a, unsigned char b);
@@ -34,42 +49,12 @@ public:
   unsigned short popStack();
 
   // Flags
-  struct Flags {
-    bool carry;
-    bool zero;
-    bool overflow;
-    bool negative;
-    bool greater;
-    bool less;
-  } flags;
 
   // Modos de endereçamento
-  enum AddressingMode { IMMEDIATE, DIRECT, INDIRECT, INDEXED, RELATIVE };
 
   unsigned char fetchOperand(AddressingMode mode, unsigned short operand);
 
   // Execução de instruções
-  enum Opcode {
-    LOAD,
-    STORE,
-    ADD,
-    SUB,
-    JUMP,
-    JEQ,
-    JNE,
-    JG,
-    JL,
-    CMP,
-    CALL,
-    RET,
-    HALT
-  };
-
-  struct Instruction {
-    Opcode opcode;             // Código da operação
-    AddressingMode addressing; // Modo de endereçamento
-    std::string mnemonic;      // Nome da operação (opcional)
-  };
 
   void executeInstruction(Instruction instr, unsigned char operand1,
                           unsigned char operand2);
@@ -93,33 +78,16 @@ public:
   void debugRegisterState() const;
 
   // Controle do clock
-  class Clock {
-  private:
-    unsigned int cycleCount;
-    unsigned int frequency; // em Hertz
-
-  public:
-    void tick();
-    unsigned int getCycleCount() const;
-  };
 
   Clock clock;
 
   // Unidade de cache
-  class Cache {
-  private:
-    unsigned char data[64]; // Cache pequena
-    unsigned char tags[64]; // Identificadores de endereço
-
-  public:
-    unsigned char read(unsigned short address);
-    void write(unsigned short address, unsigned char value);
-  };
 
   Cache cache;
 
   // Pipeline
-  struct PipelineStage {
+  struct PipelineStage
+  {
     unsigned char instruction;
     unsigned short operand1;
     unsigned short operand2;
