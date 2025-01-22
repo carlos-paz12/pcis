@@ -1,2 +1,2 @@
-Processor: neander
-Execution time: 879 cycles
+Processor: ramses
+Execution time: 37 cycles
