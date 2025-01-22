@@ -12,7 +12,7 @@ enum ProcessorType
 };
 
 // Function to select the processor
-ProcessorType selectP()
+ProcessorType select_p()
 {
   std::string choice;
   std::cout << "Select the processor you want to execute (neander, cesar, ramses): ";
@@ -36,10 +36,9 @@ ProcessorType selectP()
   }
 }
 
-// Function to load data into memory
-void loadMemoryData(Memoria &memoria, const std::string &dataFile)
+void load_memory_data(Memoria &memoria, const std::string &data_file)
 {
-  std::ifstream infile(dataFile);
+  std::ifstream infile(data_file);
   int address, value;
 
   // Carregar os dados na memória
@@ -50,10 +49,9 @@ void loadMemoryData(Memoria &memoria, const std::string &dataFile)
   }
 }
 
-// Function to load instructions into memory
-void loadMemoryInstructions(Memoria &memoria, const std::string &instrutionFile)
+void load_memory_instructions(Memoria &memoria, const std::string &instructions_file)
 {
-  std::ifstream infile(instrutionFile);
+  std::ifstream infile(instructions_file);
   int dataAddress;
   std::string opcode;
   std::vector<Instrucao> programa;
@@ -115,46 +113,45 @@ void loadMemoryInstructions(Memoria &memoria, const std::string &instrutionFile)
 
 int main(int argc, char const *argv[])
 {
-  // Select processor
-  ProcessorType processor = NEANDER;
+  ProcessorType processor = select_p();
   if (processor == INVALID)
   {
     std::cerr << "Invalid Processor" << std::endl;
     return 1;
   }
 
-  // Get file paths for data and instructions
-  std::string dataFile = argv[1], instructionFile = argv[2];
-  // std::cout << "Enter the data file path: ";
-  //  std::cin >> instructionFile;
-  // std::cout << "Enter the instruction file path: ";
+  std::string data_file{argv[1]}, instructions_file{argv[2]};
 
   Memoria memoria;
-
-  loadMemoryData(memoria, dataFile);
-  loadMemoryInstructions(memoria, instructionFile);
+  load_memory_data(memoria, data_file);
+  load_memory_instructions(memoria, instructions_file);
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  // Initialize and run processor
   switch (processor)
   {
   case NEANDER:
   {
     // Neander processor logic
-    std::cout << "\nNeander Processor:" << std::endl;
+    std::cout << "+-------------------+\n";
+    std::cout << "| Neander Processor |\n";
+    std::cout << "+-------------------+\n";
+  
     Neander neanderProcessor(memoria);       // Initialize Neander processor
     neanderProcessor.fetch_decode_execute(); // Call its execution function
+  
     break;
   }
   case CESAR:
     // Implement CESAR processor logic here
     std::cout << "\nCesar Processor: (Not yet implemented)" << std::endl;
     break;
+
   case RAMSES:
     // Implement RAMSES processor logic here
     std::cout << "\nRamses Processor: (Not yet implemented)" << std::endl;
     break;
+    
   default:
     std::cerr << "Invalid Processor" << std::endl;
     return 1;
