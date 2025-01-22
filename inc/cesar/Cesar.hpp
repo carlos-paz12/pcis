@@ -5,11 +5,11 @@
 #include "Cache.hpp"
 #include "Clock.hpp"
 #include "Flag.hpp"
-#include "Instruction.hpp"
+#include "InstrucaoCesar.hpp"
 #include "Memoria.hpp"
-#include "Opcode.hpp"
+#include "./OpcodeCesar.hpp"
 #include "PipelineStage.hpp"
-#include "ULA.hpp"
+#include "./ULACesar.hpp"
 
 typedef uint8_t Registrador;
 
@@ -22,7 +22,7 @@ class Cesar
 public:
   // Construtor para inicializar os registradores
   Cesar() : R1(0), R2(0), AC(0) {}
-  
+
   static unsigned char add8Bits(unsigned char a, unsigned char b);
   static unsigned char subtract8Bits(unsigned char a, unsigned char b);
   static unsigned char multiply8Bits(unsigned char a, unsigned char b);
@@ -56,11 +56,11 @@ public:
 
   // Execução de instruções
 
-  void executeInstruction(Instruction instr, unsigned char operand1,
+  void executeInstruction(InstrucaoCesar instr, unsigned char operand1,
                           unsigned char operand2);
 
   // Unidade de controle e decodificação
-  Instruction decodeInstruction(unsigned char opcode);
+  InstrucaoCesar decodeInstruction(unsigned char opcode);
 
   // Interrupções
   void (*interruptVector[256])(); // Tratadores de interrupção
@@ -72,7 +72,7 @@ public:
 
   // Debugging
   void printState() const;
-  void logInstruction(Instruction instr, unsigned char operand1,
+  void logInstruction(InstrucaoCesar instr, unsigned char operand1,
                       unsigned char operand2);
   void debugMemoryDump() const;
   void debugRegisterState() const;

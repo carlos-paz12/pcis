@@ -1,7 +1,7 @@
 #ifndef OPCODE_CESAR_HPP
 #define OPCODE_CESAR_HPP
 
-enum Opcode
+enum OpcodeCesar
 {
     LOAD,
     STORE,

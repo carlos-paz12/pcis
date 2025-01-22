@@ -1,16 +1,16 @@
-#ifndef INSTRUCTION_CESAR_HPP
-#define INSTRUCTION_CESAR_HPP
+#ifndef INSTRUCAO_CESAR_HPP
+#define INSTRUCAO_CESAR_HPP
 
 #include <string>
 
-#include "Opcode.hpp"
+#include "OpcodeCesar.hpp"
 #include "AddressingMode.hpp"
 
 using str = std::string;
 
-struct Instruction
+struct InstrucaoCesar
 {
-    Opcode opcode;             // Código da operação
+    OpcodeCesar opcode;             // Código da operação
     AddressingMode addressing; // Modo de endereçamento
     str mnemonic;      // Nome da operação (opcional)
 };
