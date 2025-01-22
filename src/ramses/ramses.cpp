@@ -24,6 +24,7 @@ void Ramses::print()
 ///=======================================///
 /// Implementação da Parte Operativa (PO) ///
 ///=======================================///
+
 void PO::printstate()
 {
     std::cout << "+---------------------------+" << std::endl;
@@ -31,25 +32,27 @@ void PO::printstate()
     std::cout << "+---------------------------+" << std::endl;
     std::cout << "| PC: " << std::setw(24) << (int)pc.get_pc() << " |" << std::endl;
     std::cout << "| IR: " << std::setw(24) << RI.get_opcode() << " |" << std::endl;
+    std::cout << "| Flags: " << std::setw(20) << std::bitset<8>(flags) << " |" << std::endl;
     std::cout << "| AC: " << std::setw(25) << (int)AC << " |" << std::endl;
     std::cout << "+---------------------------+" << std::endl;
 
     std::cout << "|       Registers:          |" << std::endl;
-    for (int i = 0; i < NUM_REGISTERS; ++i)
+    for (int i = 0; i < registradores.size(); ++i)
     {
-        std::cout << "| R" << i << ": " << std::setw(22) << registers[i] << " |" << std::endl;
+        std::cout << "| R" << i << ": " << std::setw(22) << registradores[i] << " |" << std::endl;
     }
     std::cout << "+---------------------------+" << std::endl;
 
     std::cout << "|         Memory:           |" << std::endl;
     for (int i = 0; i < 256; ++i)
     {
-        int val_mem = memoria.ler(i);
-        std::cout << "| M" << i << ": " << std::setw(22) << val_mem << " |" << std::endl;
+        std::cout << "| M" << i << ": " << std::setw(22) << (int)memoria.ler(i) << " |" << std::endl;
     }
     std::cout << "+---------------------------+" << std::endl;
-}
 
+    std::cout << "| ULA Operation: " << ula_operation << " |" << std::endl;
+    std::cout << "+---------------------------+" << std::endl;
+}
 void PO::SUB()
 {
     REM = RI.get_endereco();

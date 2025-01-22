@@ -1,6 +1,8 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
+#include <bits/stdc++.h>
+
 #include <cstdint> /// std::uint8_t
 #include <stdexcept>
 #include <vector>
@@ -53,6 +55,8 @@ public:
    * @param programa Um vetor de Instrucao contendo as instruções e dados do programa.
    */
   void carrega(const std::vector<Instrucao> &programa);
+
+  void print();
 };
 
 #endif /// MEMORY_H

@@ -11,12 +11,17 @@ PO::PO(Memoria &memoria, PC &pc) : memoria(memoria), pc(pc) {}
 
 void Neander::fetch_decode_execute()
 {
+    std::cout << "start\n";
     while ((int)po.RI.get_opcode() != Opcode::HLT)
     {
         po.fetch();
         po.decode();
         po.execute();
+        std::cout << "\n\n";
+        memoria.print();
+        std::cout << "\n\n";
     }
+    std::cout << "end\n";
     // po.printstate();
 }
 
@@ -71,7 +76,7 @@ void PO::reset()
 
 void PO::fetch()
 {
-    std::cout << "\n>>> INICIANDO CICLO DE BUSCA\n";
+    std::cout << "\n                 >>> INICIANDO CICLO DE BUSCA <<<                 \n";
 
     std::cout << "\tPC = " << (int)pc.get_pc() << '\n';
 
@@ -90,7 +95,7 @@ void PO::fetch()
 
 void PO::decode()
 {
-    std::cout << "\n>>> INICIANDO CICLO DE DECODIFICAÇÃO\n";
+    std::cout << "\n             >>> INICIANDO CICLO DE DECODIFICAÇÃO <<<             \n";
 
     RI = Instrucao::from_byte(RDM); ///[!] Decodifica a instrução lida.
     std::cout << "\tRI <- decode(" << (int)RDM << ")\n";
@@ -102,7 +107,7 @@ void PO::decode()
 
 void PO::execute()
 {
-    std::cout << "\n>>> INICIANDO CICLO DE EXECUÇÃO\n";
+    std::cout << "\n               >>> INICIANDO CICLO DE EXECUÇÃO <<<                \n";
     REM = RI.get_endereco();
     switch (RI.get_opcode())
     {
@@ -151,7 +156,7 @@ void PO::execute()
         break;
     default:
         ///[!] Caso padrão é HALT (não há ação).
-        std::cout << "\tHLT 0\n\nend\n";
+        std::cout << "\tHLT 0\n\n";
         break;
     }
 }
