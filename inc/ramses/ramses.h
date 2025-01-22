@@ -1,21 +1,18 @@
 #ifndef RAMSES_H
 #define RAMSES_H
 
-#include "Memoria.hpp"
-#include "Instrucao.hpp"
-#include "ULA.hpp"
-
 class PC; // Declaração antecipada da classe PC
 
-class PO { // Parte Operativa
+class PO
+{ // Parte Operativa
 public:
     Memoria &memoria;
     PC &pc;
 
-    unsigned char AC;   // Registrador acumulador
-    unsigned char REM;  // Registrador de endereço de memória
-    unsigned char RDM;  // Registrador de dados de memória
-    Instrucao RI;       // Registrador de instrução
+    unsigned char AC;  // Registrador acumulador
+    unsigned char REM; // Registrador de endereço de memória
+    unsigned char RDM; // Registrador de dados de memória
+    Instrucao RI;      // Registrador de instrução
 
     ULA ula; // Unidade Lógica e Aritmética
 
@@ -34,12 +31,13 @@ public:
     void decode();
     void execute();
 
-    void ADD16();         // Soma dois valores de 16 bits
-    void CALL_ADD16();    // Chama a sub-rotina para soma de 16 bits
-    void MAX_ARRAY();     // Determina o maior valor em um vetor de 32 posições
+    void ADD16();      // Soma dois valores de 16 bits
+    void CALL_ADD16(); // Chama a sub-rotina para soma de 16 bits
+    void MAX_ARRAY();  // Determina o maior valor em um vetor de 32 posições
 };
 
-class PC { // Parte de Controle
+class PC
+{ // Parte de Controle
 public:
     Memoria &memoria;
     PO &po;
@@ -56,7 +54,8 @@ public:
     unsigned char incrementa_cc();
 };
 
-class Ramses {
+class Ramses
+{
 private:
     Memoria &memoria;
     PO po;
